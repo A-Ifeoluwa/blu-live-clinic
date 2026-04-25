@@ -7,7 +7,7 @@ app.use(cors());
 app.use(express.json());
 
 // ✅ Updated connection string for Cosmos DB (Mongo API)
-const mongoURI = process.env.MONGO_URI || "mongodb://blulive-db:pXu55t2wQbWTv3YSOxo9s1dvSpmSf0M9P2pZKmCTtczBttvXg1uxenkpIXGmvua05gNGzX0OFHVdACDbDAwqvg==@blulive-db.mongo.cosmos.azure.com:10255/blulive-clinic-db?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@blulive-db@";
+const mongoURI = process.env.MONGO_URI;
 
 const UserSchema = new mongoose.Schema({
   username: { type: String, required: true },
