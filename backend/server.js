@@ -6,8 +6,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-
-const mongoURI = process.env.MONGO_URI || 'mongodb://mongodb:27017/liveclinic';
+// ✅ Updated connection string for Cosmos DB (Mongo API)
+const mongoURI = process.env.MONGO_URI || "mongodb://blulive-db:pXu55t2wQbWTv3YSOxo9s1dvSpmSf0M9P2pZKmCTtczBttvXg1uxenkpIXGmvua05gNGzX0OFHVdACDbDAwqvg==@blulive-db.mongo.cosmos.azure.com:10255/blulive-clinic-db?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@blulive-db@";
 
 const UserSchema = new mongoose.Schema({
   username: { type: String, required: true },
@@ -36,7 +36,10 @@ const seedUsers = async () => {
   } catch (err) { console.error('Seed error:', err); }
 };
 
-mongoose.connect(mongoURI).then(() => seedUsers());
+// ✅ Added connection options for Cosmos DB
+mongoose.connect(mongoURI, { tls: true, retryWrites: false })
+  .then(() => seedUsers())
+  .catch(err => console.error("Cosmos DB connection error:", err));
 
 // --- ROUTES ---
 
