@@ -54,9 +54,12 @@ app.post('/api/register', async (req, res) => {
 
 app.get('/api/patients', async (req, res) => {
   try {
-    const patients = await User.find({ role: 'patient' }).sort({ createdAt: -1 });
+    const patients = await User.find({ role: 'patient' });
     res.json(patients);
-  } catch (err) { res.status(500).send({ error: "Fetch failed" }); }
+  } catch (err) {
+    console.error("PATIENT FETCH ERROR:", err);
+    res.status(500).send({ error: err.message });
+  }
 });
 
 app.put('/api/assign', async (req, res) => {
