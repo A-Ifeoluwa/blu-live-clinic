@@ -117,6 +117,41 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
+// LOGIN(newest)
+app.post('/api/login', async (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    // find user
+    const user = await User.findOne({ username });
+
+    if (!user) {
+      return res.status(400).json({ error: "User not found" });
+    }
+
+    // compare password
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return res.status(400).json({ error: "Invalid credentials" });
+    }
+
+    // optional: decrypt sensitive fields if needed
+    const userData = {
+      ...user._doc,
+      phone: decrypt(user.phone),
+      symptoms: decrypt(user.symptoms),
+      location: decrypt(user.location)
+    };
+
+    res.json({ msg: "Login successful", user: userData });
+
+  } catch (err) {
+    console.error("LOGIN ERROR:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // GET PATIENTS (WITH DECRYPTION)
 app.get('/api/patients', async (req, res) => {
   try {
